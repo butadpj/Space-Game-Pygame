@@ -66,7 +66,7 @@ def main():
     bullet_init = Bullet()
     bullet_init_properties = vars(bullet_init)
 
-# ENEMY VARIABLES (not done fix random)
+# ENEMY VARIABLES 
     class Enemy():
         def __init__(self,img_path,x,y,x_change,y_change):
             self.enemy_img = pygame.image.load(img_path)
@@ -86,8 +86,9 @@ def main():
 
         def display_explosion(self,x,y):
             screen_init.screen.blit(self.explosion_img, (x,y))
-            
 
+    # FOR DISPLAYING THE ENEMIES
+    
     enemy_count = 5
     enemy_array = []
     x = random.randrange(20,300)
@@ -148,13 +149,11 @@ def main():
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     character_init.character_x_change = 0
                     bullet_init.bullet_x_change = 0
-        
-# OTHER SETTINGS
 
-    # BACKGROUND COLOR DISPLAY 
+# BACKGROUND COLOR DISPLAY 
         screen_init.screen.fill(bg_settings())
 
-    # COLLISION FUNCTION CALLS
+# COLLISION FUNCTION CALLS
         for enemy in enemy_array:
             collision_detect = is_collided(enemy.enemy_x,enemy.enemy_y,bullet_init.bullet_x,bullet_init.bullet_y)
 
@@ -167,7 +166,7 @@ def main():
                 
                 enemy.enemy_y = -1000
                 
-    # VALUES THAT ARE UNDECLARABLE AT THE START 
+# VALUES THAT ARE UNDECLARABLE AT THE START 
 
         character_init.character_x += character_init.character_x_change
       
@@ -178,7 +177,7 @@ def main():
             bullet_init.bullet_x = character_init.character_x + 10
             bullet_init.bullet_y = character_init.character_y + 10
 
-    # BULLET, SHIP, AND ENEMY DISPLAY CODE
+# BULLET, SHIP, AND ENEMY DISPLAY 
 
         bullet_init.display_bullet(bullet_init.bullet_x,bullet_init.bullet_y)
         # bullet_init.display_bullet(bullet_init.bullet_x + 15,bullet_init.bullet_y + 10)
@@ -189,7 +188,7 @@ def main():
         for enemy in enemy_array:
             enemy.display_enemy(enemy.enemy_x, 150)
 
-    # CODE THAT UPDATES THE DISPLAY SCREEN
+    # UPDATING THE DISPLAY SCREEN
         pygame.display.update()
 
 
