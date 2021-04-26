@@ -153,7 +153,8 @@ def main():
 # BACKGROUND COLOR DISPLAY 
         screen_init.screen.fill(bg_settings())
 
-# COLLISION FUNCTION CALLS
+# COLLISION AND EXPLOSIONa
+
         for enemy in enemy_array:
             collision_detect = is_collided(enemy.enemy_x,enemy.enemy_y,bullet_init.bullet_x,bullet_init.bullet_y)
 
@@ -191,7 +192,7 @@ def main():
     # UPDATING THE DISPLAY SCREEN
         pygame.display.update()
 
-
+# i got da power
 main()
 
 
