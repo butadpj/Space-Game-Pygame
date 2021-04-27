@@ -7,8 +7,9 @@ import time
 pygame.init()
 
 def main():
-
-    transparent = (0,0,0,0)
+    TRANSPARENT = (0,0,0,0)
+    OPAQUE = (255,0,0,255)
+    RUNNING = True
 
 # SCREEN DISPLAY SIZE, TITLE, AND OTHERS
     class Screen():
@@ -66,7 +67,7 @@ def main():
     bullet_init = Bullet()
     bullet_init_properties = vars(bullet_init)
 
-# ENEMY VARIABLES (not done fix random)
+# ENEMY VARIABLES 
     class Enemy():
         def __init__(self,img_path,x,y,x_change,y_change):
             self.enemy_img = pygame.image.load(img_path)
@@ -86,8 +87,9 @@ def main():
 
         def display_explosion(self,x,y):
             screen_init.screen.blit(self.explosion_img, (x,y))
-            
 
+    # FOR DISPLAYING THE ENEMIES
+    
     enemy_count = 5
     enemy_array = []
     x = random.randrange(20,300)
@@ -101,6 +103,20 @@ def main():
         y_change = 0
         enemy_array.append(Enemy(img_path,x,y,x_change,y_change))
     
+# POWERUP VARIABLES
+
+    class PowerUp():
+        def __init__(self):
+            self.powerup_x = random.randrange(100,700)
+            self.powerup_y = 510
+            self.powerup_img = pygame.image.load("assets/gunpowerup50.png")
+        def display_powerup(self,x,y):
+            screen_init.screen.blit(self.powerup_img,(x,y))
+    powerup_init = PowerUp()
+
+# IN-GAME TIMER
+    start_timer = pygame.time.get_ticks()
+
 # BACKGROUND SETTINGS
 
     def bg_settings():
@@ -117,11 +133,14 @@ def main():
             return False
 
 # TO MAKE SURE GAME IS QUITTABLE (while loop)
-    running = True
-    while running == True:
+
+    while RUNNING == True:
+        milliseconds = pygame.time.get_ticks() - start_timer
+        seconds = milliseconds / 1000
+        print(seconds)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                RUNNING = False
  
 # KEYBINDS AND FUNCTIONS OF EACH 
             
@@ -148,26 +167,27 @@ def main():
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     character_init.character_x_change = 0
                     bullet_init.bullet_x_change = 0
-        
-# OTHER SETTINGS
 
-    # BACKGROUND COLOR DISPLAY 
+# BACKGROUND COLOR DISPLAY 
         screen_init.screen.fill(bg_settings())
 
-    # COLLISION FUNCTION CALLS
+# COLLISION AND EXPLOSIONS (almost done check note)
+
         for enemy in enemy_array:
             collision_detect = is_collided(enemy.enemy_x,enemy.enemy_y,bullet_init.bullet_x,bullet_init.bullet_y)
-
+            enemy.enemy_img.fill(TRANSPARENT)
+            if seconds >= 5:
+                enemy.enemy_img.fill(OPAQUE)
             if collision_detect == True:
                 bullet_init.bullet_x = character_init.character_x + 10
                 bullet_init.bullet_y = character_init.character_y + 10
-                enemy.enemy_img.fill(transparent)
+                enemy.enemy_img.fill(TRANSPARENT)
                 
                 enemy.display_explosion(enemy.enemy_x,enemy.enemy_y)
                 
                 enemy.enemy_y = -1000
                 
-    # VALUES THAT ARE UNDECLARABLE AT THE START 
+# VALUES THAT ARE UNDECLARABLE AT THE START 
 
         character_init.character_x += character_init.character_x_change
       
@@ -178,30 +198,53 @@ def main():
             bullet_init.bullet_x = character_init.character_x + 10
             bullet_init.bullet_y = character_init.character_y + 10
 
-    # BULLET, SHIP, AND ENEMY DISPLAY CODE
+# BULLET, SHIP, AND ENEMY DISPLAY (not done with extra bullet powerup display)
 
         bullet_init.display_bullet(bullet_init.bullet_x,bullet_init.bullet_y)
-        # bullet_init.display_bullet(bullet_init.bullet_x + 15,bullet_init.bullet_y + 10)
-        # bullet_init.display_bullet(bullet_init.bullet_x - 13,bullet_init.bullet_y +10 )
+
         
         character_init.display_character(character_init.character_x,character_init.character_y)
-
         for enemy in enemy_array:
-            enemy.display_enemy(enemy.enemy_x, 150)
+            enemy.display_enemy(enemy.enemy_x, enemy.enemy_y)
 
-    # CODE THAT UPDATES THE DISPLAY SCREEN
+
+    # POWERUPS
+
+        if seconds >= 2:
+            powerup_init.display_powerup(powerup_init.powerup_x,powerup_init.powerup_y)
+            if is_collided(character_init.character_x,character_init.character_y,powerup_init.powerup_x,powerup_init.powerup_y):
+                powerup_init.powerup_img.fill(TRANSPARENT)
+                bullet_init.display_bullet(bullet_init.bullet_x + 15,bullet_init.bullet_y + 10)
+                bullet_init.display_bullet(bullet_init.bullet_x - 13,bullet_init.bullet_y +10 )
+
+    # UPDATING THE DISPLAY SCREEN
         pygame.display.update()
+
+
+
+
+
+        
 
 
 main()
 
 
-
+# master main
 
 
 
 # ideas
 # when character x = certain number like when the player hovers over
+
+# note
+# when seconds is greater than or equal to 5 then the boxes will appear 
+# based on https://nerdparadise.com/programming/pygameblitopacity there will be a box which there is 
+# so follow instructions and rename when necessary
+
+
+
+
 
 
 
